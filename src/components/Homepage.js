@@ -1,4 +1,5 @@
 export default function Homepage() {
+    
     return (
         <div className="home">
             <nav class="navbar navbar-expand-sm">

@@ -3,7 +3,6 @@ import SignUp from './components/SignUp';
 import CardPayment from './components/CardPayment';
 import Homepage from './components/Homepage';
 import { Routes, Route } from 'react-router-dom'
-
 function App() {
   return (
     <div className="App">

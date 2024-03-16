@@ -3,27 +3,32 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 export default function Login() {
-    const [error, setError] = useState();
-    const [email, setEmail] = useState();
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({ email: '', password: '' });
     const navigate = useNavigate();
     const isEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
 
     const handleChange = (e) => {
+        setError("")
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!isEmail.test(email)){
-            setError = "Invalid email"
+        if (!formData.email || !formData.password) {
+            setError("Fields cannot be empty");
+            return;
+        }
+        else if (!isEmail.test(formData.email)) {
+            setError("Invalid email");
+            return;
         }
         try {
             const response = await axios.post('http://localhost:5005/api/User/login', formData);
             if (response.status === 200) {
                 const token = response.data.token;
                 localStorage.setItem('token', token);
-                console.log("Token:", token)// Store token in local storage 
+                console.log("Token:", token);
                 navigate('/homepage');
             } else {
                 console.log(response.data);
@@ -33,16 +38,18 @@ export default function Login() {
         }
     };
     return (
-        <div className="login">
-            <p className="sign" align="center">Login</p>
-            <form className="login-form" onSubmit={handleSubmit}>
-                <input className="un" type="text" align="center" placeholder="Email" name='email' value={formData.email} onChange={handleChange} required />
-                <p>{error}</p>
-                <input className="pass" type="password" align="center" placeholder="Password" name='password' value={formData.password} onChange={handleChange} required />
-                <button className="submit" type="submit">Login</button>
-                <p className="forgot" align="center"><a href="#">Forgot Password?</a></p>
-                <label>Don't have an account? <a href="/signup">SignUp</a></label>
-            </form>
+        <div className='login-signup'>
+            <div className="login">
+                <p className="sign" align="center">Login</p>
+                <p className='error'>{error}</p>
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <input className="un" type="text" align="center" placeholder="Email" name='email' value={formData.email} onChange={handleChange} />
+                    <input className="pass" type="password" align="center" placeholder="Password" name='password' value={formData.password} onChange={handleChange} />
+                    <button className="submit" type="submit">Login</button>
+                    <p className="forgot" align="center"><a href="#">Forgot Password?</a></p>
+                    <label>Don't have an account? <a href="/signup">SignUp</a></label>
+                </form>
+            </div>
         </div>
     );
 } 
