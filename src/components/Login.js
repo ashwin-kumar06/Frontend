@@ -9,7 +9,7 @@ export default function Login() {
     const isEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
 
     const handleChange = (e) => {
-        setError("")
+        setError("");
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
