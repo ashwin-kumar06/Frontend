@@ -3,7 +3,7 @@ import '../styles/CardPayment.css';
 
 export default function CardPayment() {
     return (
-        <div class="container p-0">
+        <div class="payment container p-0">
             <div class="paymentcard px-4">
                 <p class="h8 py-3">Payment Details</p>
                 <div class="row gx-3">

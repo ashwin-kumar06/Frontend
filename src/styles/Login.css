@@ -142,3 +142,8 @@ label{
 	color: red;
 	font-weight: 400;
 }
+
+.gallery img{
+	width: 470px;
+	margin: 5px;
+}

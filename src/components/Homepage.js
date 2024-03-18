@@ -34,11 +34,34 @@ export default function Homepage() {
                 </div>
             </nav>
             <div className="home-main">
-                <div className="gallery">
-                    <div className="row">
-                        <div className="col" style={{ backgroundColor: "blue" }}></div>
-                        <div className="col" style={{ backgroundColor: "yellow" }}>3rd</div>
-                        <div className="col" style={{ backgroundColor: "red" }}></div>
+                <div className="gallery container-fluid">
+                    <div className="row ">
+                        <div className="col-4">
+                            <img src={photos.image1} alt="1" />
+                            <img src={photos.image2} alt="2" />
+                            <img src={photos.image3} alt="3" />
+                            <img src={photos.image4} alt="4" />
+                            <img src={photos.image11} alt="11" />
+                            <img src={photos.image14} alt="14" />
+                            <img src={photos.image17} alt="17" />
+                        </div>
+                        <div className="col-4">
+                            <img src={photos.image5} alt="5" />
+                            <img src={photos.image6} alt="6" />
+                            <img src={photos.image7} alt="7" />
+                            <img src={photos.image12} alt="12" />
+                            <img src={photos.image15} alt="15" />
+                            <img src={photos.image18} alt="18" />
+                        </div>
+                        <div className="col-4">
+                            <img src={photos.image8} alt="8" />
+                            <img src={photos.image9} alt="9" />
+                            <img src={photos.image10} alt="10" />
+                            <img src={photos.image13} alt="13" />
+                            <img src={photos.image16} alt="16" />
+                            <img src={photos.image19} alt="19" />
+                            <img src={photos.image20} alt="20" />
+                        </div>
                     </div>
                 </div>
             </div>
