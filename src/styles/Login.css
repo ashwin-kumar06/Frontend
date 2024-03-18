@@ -117,16 +117,20 @@ label{
 	height: 70px;
 	font-size: larger;
 	border-radius: 50px;
-	background-color: blue;
 	opacity: 0.6;
 	
 }
-.navbar a{
-	color: white;
+
+.navbar-toggler{
+	width: 50px;
 }
 
 .navbar-toggler-icon{
 	color: #fff;
+}
+
+.navbar button{
+	margin-right: 30px;
 }
 
 .dropdown-menu a{

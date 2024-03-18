@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import '../styles/Login.css';
 import axios from 'axios';
@@ -8,6 +8,10 @@ export default function SignUp() {
     const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const navigate = useNavigate();
     const isEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+
+    useEffect(()=>{
+        document.title = "Sign up"
+    })
 
     const handleChange = (e) => {
         setError("");

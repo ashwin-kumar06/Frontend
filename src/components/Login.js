@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -7,7 +7,10 @@ export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const navigate = useNavigate();
     const isEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-
+    
+    useEffect(()=>{
+        document.title = "Login"
+    })
     const handleChange = (e) => {
         setError("");
         setFormData({ ...formData, [e.target.name]: e.target.value });

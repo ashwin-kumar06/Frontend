@@ -1,5 +1,10 @@
+import { useEffect } from "react";
+import photos from "../photos";
+
 export default function Homepage() {
-    
+    useEffect(() => {
+        document.title = "Homepage"
+    })
     return (
         <div className="home">
             <nav class="navbar navbar-expand-sm">
@@ -8,7 +13,6 @@ export default function Homepage() {
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-
                     <div class="collapse navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav">
                             <li class="nav-item">
@@ -30,7 +34,13 @@ export default function Homepage() {
                 </div>
             </nav>
             <div className="home-main">
-                
+                <div className="gallery">
+                    <div className="row">
+                        <div className="col" style={{ backgroundColor: "blue" }}></div>
+                        <div className="col" style={{ backgroundColor: "yellow" }}>3rd</div>
+                        <div className="col" style={{ backgroundColor: "red" }}></div>
+                    </div>
+                </div>
             </div>
         </div>
     );
