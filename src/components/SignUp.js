@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react';
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/Login.css';
 import axios from 'axios';
 
@@ -29,7 +29,7 @@ export default function SignUp() {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:5005/api/User/signup', formData);
+            const response = await axios.post('http://localhost:5269/api/SignupLogin/signup', formData);
             console.log('User created:', response.data);
             window.alert('User Signed in successfuly');
             navigate('/login');
