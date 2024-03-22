@@ -4,19 +4,36 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 export default function ProductListing() {
     const [products, setProducts] = useState([]);
+    const [imageSrc, setImageSrc] = useState([]);
+
     const [selectedProduct, setSelectedProduct] = useState(null);
+
     useEffect(() => {
         fetchProducts();
     }, []);
 
-    const fetchProducts = async () => {
-        try {
-            const response = await axios.get('http://localhost:5269/api/Products'); // Assuming the API endpoint is correct 
-            setProducts(response.data);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
-    };
+    const fetchProducts = async () => { 
+        try { 
+            const response = await axios.get('http://localhost:5269/api/Products'); // Assuming the API endpoint is correct  
+
+            const productsWithImages = await Promise.all(response.data.map(async (product) => { 
+                try { 
+                    const imageResponse = await axios.get(`http://localhost:5269/api/Products/${product.productId}/Image`, { 
+                        responseType: 'arraybuffer', 
+                    }); 
+                    const imageUrl = URL.createObjectURL(new Blob([imageResponse.data], { type: 'image/jpeg' })); 
+                    return { ...product, imageUrl }; 
+                } catch (error) { 
+                    console.error('Error fetching image for product:', product.productId, error); 
+                    return product; 
+                } 
+            })); 
+            setProducts(productsWithImages); 
+            console.log("set",products)
+        } catch (error) { 
+            console.error('Error fetching products:', error); 
+        } 
+    }; 
 
     const handleProductDetails = (product) => {
         setSelectedProduct(product);
@@ -104,6 +121,7 @@ export default function ProductListing() {
                                     <h3>{product.title}</h3>
                                     <p>Top Price: {product.startingPrice}</p>
                                     <p>Ending Date: {product.endingDate}</p>
+                                    <img src={product.imageUrl} alt={product.title }/>
                                     <div className="start-auction">
                                         <button className="btn btn-primary" type='button' onClick={() => handleProductDetails(product)}>Details</button>
                                     </div>
@@ -116,6 +134,7 @@ export default function ProductListing() {
                             <div>
                                 <h2>{selectedProduct.title}</h2>
                                 <p>Description: {selectedProduct.description}</p>
+                                <p>Description: {selectedProduct.category}</p>
 
                             </div>
                         )}
