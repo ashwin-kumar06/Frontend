@@ -3,15 +3,35 @@ import axios from 'axios';
 import '../styles/AddProduct.css'
 
 export default function AddProducts() {
-    const [formData, setFormData] = useState({ title: '', description:'', category:'', condition: '', startingPrice:'', startingDate:'', endingDate:'', sellerId:'1', status:'' });
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const [formData, setFormData] = useState({ title: '', description:'', category:'', condition: '', startingPrice:'', startingDate:'', endingDate:'', sellerId:'1', status:'', image: null });
+
+    const handleChange = (e) => { 
+        if (e.target.name === 'image') { 
+            setFormData({ ...formData, [e.target.name]: e.target.files[0] }); // Store the selected image file 
+        } else { 
+            setFormData({ ...formData, [e.target.name]: e.target.value }); 
+        }
+    }; 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
-            const response = await axios.post('http://localhost:5269/api/Products?userId=1',formData);
+            const formDataWithImage = new FormData(); // Create FormData object to handle file uploads 
+            formDataWithImage.append('userId', formData.sellerId); 
+            formDataWithImage.append('title', formData.title); 
+            formDataWithImage.append('description', formData.description); 
+            formDataWithImage.append('category', formData.category); 
+            formDataWithImage.append('condition', formData.condition); 
+            formDataWithImage.append('startingPrice', formData.startingPrice); 
+            formDataWithImage.append('startingDate', formData.startingDate); 
+            formDataWithImage.append('endingDate', formData.endingDate); 
+            formDataWithImage.append('status', formData.status); 
+            formDataWithImage.append('imagePath', formData.image);
+            const response = await axios.post('http://localhost:5269/api/Products?userId=1',formDataWithImage,{
+                headers: { 
+                    'Content-Type': 'multipart/form-data' // Set content type for FormData 
+                } 
+            });
             console.log("Product created", response.data);
         }
         catch(error){
@@ -54,12 +74,9 @@ export default function AddProducts() {
                             <div className='col-5 d-flex'>
                                 <div className='col'>
                                     <label class="control-label">Add Image</label>
-                                    <input type="file" class="form-control" />
+                                    <input type="file" class="form-control" name='image' onChange={handleChange} accept='image/*'/>
                                 </div>
-                                <div className='col ms-5'>
-                                    <label class="control-label">Add Video</label>
-                                    <input type="file" class="form-control" />
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="col-sm-6">
