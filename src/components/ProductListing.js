@@ -2,12 +2,19 @@ import '../styles/ProductListing.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+
+
 export default function ProductListing() {
+    const userId = localStorage.getItem('signin');
+    console.log("user",userId);
     const [formData, setFormData] = useState({ bidAmount: '' });
     const [products, setProducts] = useState([]);
-    const [imageSrc, setImageSrc] = useState([]);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-
+    const [filteredProducts, setFilteredProducts] = useState([]); 
+    const [selectedProduct, setSelectedProduct] = useState(null); 
+    const [showModal, setShowModal] = useState(false); 
+    const [searchQuery, setSearchQuery] = useState(''); 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -22,7 +29,8 @@ export default function ProductListing() {
         const time = currentDate.getTime();
         setFormData(formData.timeStamp = time);
         try {
-            const response = await axios.post(`http://localhost:5269/api/Bids?userId=${1}&productId=${e}&bidAmount=${formData.bidAmount}`, formData);
+            const response = await axios.post(`http://localhost:5269/api/Bids?userId=${userId}&productId=${e}&bidAmount=${formData.bidAmount}`, formData);
+            setShowModal(true);
             console.log('bid:', response.data);
         } catch (error) {
             console.error('Error creating user:', error.response.data);
@@ -47,6 +55,7 @@ export default function ProductListing() {
                 }
             }));
             setProducts(productsWithImages);
+            setFilteredProducts(productsWithImages);
             setSelectedProduct(productsWithImages[0])
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -57,12 +66,37 @@ export default function ProductListing() {
         setSelectedProduct(product);
     }
 
+    const handleSearch = (e) => { 
+        const query = e.target.value.toLowerCase(); 
+        setSearchQuery(query); 
+        const filtered = products.filter(product => product.title.toLowerCase().includes(query)); 
+        setFilteredProducts(filtered); 
+    }; 
+
+    const handleLogout = async () => {
+        try {
+            const cleanupLocalStorage = () => {
+                localStorage.removeItem('signin'); // Remove userId from local storage 
+            };
+            window.addEventListener('beforeunload', cleanupLocalStorage);
+            return () => {
+                window.removeEventListener('beforeunload', cleanupLocalStorage);
+            };
+            
+        } catch (error) {
+            console.error('Error:', error);
+        }finally{
+            window.location.reload();
+
+        }
+    }
+
     return (
         <div className="product-listing">
             <nav>
-                <div class="navbar navbar-expand-lg pt-4">
+                <div class="navbar navbar-expand-lg pt-4 mt-4">
                     <div class="container-fluid">
-                        <a href="#" class="brand text-decoration-none">AAA</a>
+                        <a href="/homepage" class="brand text-decoration-none">AAA</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -71,24 +105,22 @@ export default function ProductListing() {
                         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                             <ul id="nav-length" class="navbar-nav justify-content-between border-top border-2 text-center">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link border-hover py-3">Home</a>
+                                    <a href='/' class="nav-link border-hover py-3" style={{color:'black'}}>Home</a>
                                 </li>
                                 <li class="nav-item d-flex justify-content-center h-100">
                                     <div class="searchbar">
-                                        <input class="search_input" type="text" name="" placeholder="Search..." />
+                                        <input class="search_input" type="text" name="searchQuery" placeholder="Search..." value={searchQuery} onChange={handleSearch}/>
                                         <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
                                     </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link border-hover py-3">About</a>
+                                    <a href="#" class="nav-link border-hover py-3" style={{color:'black'}}>About</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link border-hover py-3">Contact</a>
+                                    <a href="#" class="nav-link border-hover py-3" style={{color:'black'}}>Contact</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" id="sign-in" class="nav-link my-2 px-4 text-white">
-                                        Sign In
-                                    </a>
+                                    {userId? <a href="#" id="sign-in" class="nav-link my-2 px-4 text-white" onClick={handleLogout}>Logout</a>:<a href="/login" id="sign-in" class="nav-link my-2 px-4 text-white">signin</a>}
                                 </li>
                             </ul>
                         </div>
@@ -110,21 +142,18 @@ export default function ProductListing() {
                     <div className='recent'>
                         <h5>Recent Bidders</h5>
                         <ul>
-                            <li><a href="">Marketing Stratergies</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Marketing Stratergies</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Marketing Stratergies</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
-                            <li><a href="">Analytics</a></li>
+                            <li><a href="">Ramesh</a></li>
+                            <li><a href="">Suresh</a></li>
+                            <li><a href="">Dinesh</a></li>
+                            <li><a href="">Ganesh</a></li>
+                            <li><a href="">Vimal</a></li>
+                            <li><a href="">Kamal</a></li>
+                            <li><a href="">Naruto</a></li>
+                            <li><a href="">Sasuke</a></li>
+                            <li><a href="">Luffy</a></li>
+                            <li><a href="">Madara</a></li>
+                            <li><a href="">Ichigo</a></li>
+                            <li><a href="">Lee</a></li>
                         </ul>
                     </div>
                 </div>
@@ -133,9 +162,9 @@ export default function ProductListing() {
                     <div className='listing'>
                         <h1 >Products List</h1>
                         <div className="products-container">
-                            {products.map((product, index) => (
+                            {filteredProducts.map((product, index) => (
                                 <div key={product.productId} className="product-item">
-                                    <h3>{product.title}</h3>
+                                    <h3 onClick={() => handleProductDetails(product)}>{product.title}</h3>
                                     <p>Top Price: {product.startingPrice}</p>
                                     <p>Ending Date: {product.endingDate}</p>
                                     <img src={product.imageUrl} alt={product.title} />
@@ -180,6 +209,24 @@ export default function ProductListing() {
                     
                 </div>
             </div>
+            <div id="myModal" className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}> 
+                <div className="modal-dialog modal-confirm"> 
+                    <div className="modal-content"> 
+                        <div className="modal-header"> 
+                            <div className="icon-box"> 
+                                <i className="material-icons">&#xE876;</i> 
+                            </div> 
+                            <h4 className="modal-title w-100">Awesome!</h4> 
+                        </div> 
+                        <div className="modal-body"> 
+                            <p className="text-center">Your Bidding has been confirmed</p> 
+                        </div> 
+                        <div className="modal-footer"> 
+                            <button className="btn btn-success btn-block" onClick={() => {setShowModal(false); window.location.reload();}}>OK</button> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
         </div>
     )
 }

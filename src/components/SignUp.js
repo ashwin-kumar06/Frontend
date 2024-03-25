@@ -28,11 +28,17 @@ export default function SignUp() {
             setError("Invalid email");
             return;
         }
+        else if(formData.password != formData.confirmPassword){
+            setError("Password mismatch")
+            return;
+        }
         try {
             const response = await axios.post('http://localhost:5269/api/SignupLogin/signup', formData);
             console.log('User created:', response.data);
+            const userId = response.data.userId;
+            localStorage.setItem('signin',userId)
             window.alert('User Signed in successfuly');
-            navigate('/login');
+            navigate('/personaldetails');
         } catch (error) {
             console.error('Error creating user:', error.response.data);
         }

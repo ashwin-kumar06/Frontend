@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+
 import axios from 'axios';
 
 export default function Login() {
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({ email: '', password: '' });
+    const [userData, setUserData] = useState([]);
     const navigate = useNavigate();
     const isEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-    
+
     useEffect(()=>{
         document.title = "Login"
     })
+
     const handleChange = (e) => {
         setError("");
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,10 +32,12 @@ export default function Login() {
         try {
             const response = await axios.post('http://localhost:5269/api/SignupLogin/login', formData);
             if (response.status === 200) {
-                const token = response.data.token;
+                const token = response.data.tokenString;
                 localStorage.setItem('token', token);
-                console.log("Token:", token);
-                navigate('/homepage');
+                const userId = response.data.userId;
+                localStorage.setItem('signin',userId);
+                console.log("User: ",userId);
+                navigate('/');
             } else {
                 console.log(response.data);
             }

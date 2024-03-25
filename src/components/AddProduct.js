@@ -1,40 +1,48 @@
 import { useState } from 'react';
 import axios from 'axios';
 import '../styles/AddProduct.css'
+import { useLocation } from 'react-router-dom';
 
 export default function AddProducts() {
-    const [formData, setFormData] = useState({ title: '', description:'', category:'', condition: '', startingPrice:'', startingDate:'', endingDate:'', sellerId:'1', status:'', image: null });
+    const userId = localStorage.getItem('signin');
+    console.log("addpro", userId);
+    const [showModal, setShowModal] = useState(false);
+    const currentDate = new Date();
+     
+    const [formData, setFormData] = useState({ title: '', description: '', category: '', condition: '', startingPrice: '', startingDate:'' , endingDate: '', sellerId: '', status: '', image: null });
 
-    const handleChange = (e) => { 
-        if (e.target.name === 'image') { 
+    const handleChange = (e) => {
+        if (e.target.name === 'image') {
             setFormData({ ...formData, [e.target.name]: e.target.files[0] }); // Store the selected image file 
-        } else { 
-            setFormData({ ...formData, [e.target.name]: e.target.value }); 
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
         }
-    }; 
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
+        try {
             const formDataWithImage = new FormData(); // Create FormData object to handle file uploads 
-            formDataWithImage.append('userId', formData.sellerId); 
-            formDataWithImage.append('title', formData.title); 
-            formDataWithImage.append('description', formData.description); 
-            formDataWithImage.append('category', formData.category); 
-            formDataWithImage.append('condition', formData.condition); 
-            formDataWithImage.append('startingPrice', formData.startingPrice); 
-            formDataWithImage.append('startingDate', formData.startingDate); 
-            formDataWithImage.append('endingDate', formData.endingDate); 
-            formDataWithImage.append('status', formData.status); 
+            formDataWithImage.append('userId', formData.sellerId);
+            formDataWithImage.append('title', formData.title);
+            formDataWithImage.append('description', formData.description);
+            formDataWithImage.append('category', formData.category);
+            formDataWithImage.append('condition', formData.condition);
+            formDataWithImage.append('startingPrice', formData.startingPrice);
+            formDataWithImage.append('startingDate', currentDate);
+            formDataWithImage.append('endingDate', formData.endingDate);
+            formDataWithImage.append('status', formData.status);
             formDataWithImage.append('imagePath', formData.image);
-            const response = await axios.post('http://localhost:5269/api/Products?userId=1',formDataWithImage,{
-                headers: { 
+            const response = await axios.post(`http://localhost:5269/api/Products?userId=${userId}`, formDataWithImage, {
+                headers: {
                     'Content-Type': 'multipart/form-data' // Set content type for FormData 
-                } 
+                }
+                
             });
+            setShowModal(true);
             console.log("Product created", response.data);
         }
-        catch(error){
+        catch (error) {
             console.error('Error creating product:', error);
         }
     };
@@ -44,6 +52,7 @@ export default function AddProducts() {
             <div className="sidebar-form d-flex">
                 <div className="sidebar">
                     <div>
+                        <a href='/'>Home</a>
                         <a href="">Marketing Stratergies</a>
                         <a href="">Analytics</a>
                         <a href="">History</a>
@@ -61,7 +70,7 @@ export default function AddProducts() {
                                 <div class="form-group row">
                                     <label class="control-label col-1">Title</label>
                                     <div class="col-6">
-                                        <input type="text" class="form-control" placeholder='Product name' name='title' value={formData.title} onChange={handleChange}/>
+                                        <input type="text" class="form-control" placeholder='Product name' name='title' value={formData.title} onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -74,17 +83,9 @@ export default function AddProducts() {
                             <div className='col-5 d-flex'>
                                 <div className='col'>
                                     <label class="control-label">Add Image</label>
-                                    <input type="file" class="form-control" name='image' onChange={handleChange} accept='image/*'/>
+                                    <input type="file" class="form-control" name='image' onChange={handleChange} accept='image/*' />
                                 </div>
-                                
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class=" control-label">Start Date</label>
-                                <div class="col-sm-8">
-                                    <input type="date" class="date-start ml-5 form-control datepicker" placeholder="Date Start" name='startingDate' value={formData.startingDate} onChange={handleChange}/>
-                                </div>
+
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -105,7 +106,7 @@ export default function AddProducts() {
                             <div class="form-group">
                                 <label class=" control-label">Expiry Date</label>
                                 <div class="col-sm-8">
-                                    <input type="date" class="date-end ml-5 form-control datepicker col-sm-8" placeholder="Date End" name='endingDate' value={formData.endingDate} onChange={handleChange}/>
+                                    <input type="date" class="date-end ml-5 form-control datepicker col-sm-8" placeholder="Date End" name='endingDate' value={formData.endingDate} onChange={handleChange} />
                                 </div>
                             </div>
                         </div>
@@ -114,6 +115,7 @@ export default function AddProducts() {
                                 <label class=" control-label">Condition</label>
                                 <div class="col-sm-8">
                                     <select name="condition" class="form-control" value={formData.condition} onChange={handleChange}>
+                                        <option value="New">select condition</option>
                                         <option value="New">New</option>
                                         <option value="Good condition">Good condition</option>
                                         <option value="Little scratches">Little scratches</option>
@@ -127,7 +129,7 @@ export default function AddProducts() {
                             <div class="form-group">
                                 <label class=" control-label">Starting Price</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name='startingPrice' value={formData.startingPrice} onChange={handleChange}/>
+                                    <input type="text" class="form-control" name='startingPrice' value={formData.startingPrice} onChange={handleChange} />
                                 </div>
                             </div>
                         </div>
@@ -136,8 +138,8 @@ export default function AddProducts() {
                                 <label class=" control-label">Status</label>
                                 <div class="col-sm-8">
                                     <select name="status" class="form-control" value={formData.status} onChange={handleChange}>
-                                        <option value="Open">Open</option>
-                                        <option value="Close">Close</option>
+                                        <option value="Open">Close</option>
+                                        <option value="Close">Open</option>
                                     </select>
                                 </div>
                             </div>
@@ -147,6 +149,24 @@ export default function AddProducts() {
                         </div>
                     </form>
                 </div>
+            </div>
+            <div id="myModal" className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}> 
+                <div className="modal-dialog modal-confirm"> 
+                    <div className="modal-content"> 
+                        <div className="modal-header"> 
+                            <div className="icon-box"> 
+                                <i className="material-icons">&#xE876;</i> 
+                            </div> 
+                            <h4 className="modal-title w-100">Awesome!</h4> 
+                        </div> 
+                        <div className="modal-body"> 
+                            <p className="text-center">Your Auction has started</p> 
+                        </div> 
+                        <div className="modal-footer"> 
+                            <button className="btn btn-success btn-block" onClick={() => {setShowModal(false); window.location.reload();}}>OK</button> 
+                        </div> 
+                    </div> 
+                </div> 
             </div>
         </div>
     )
