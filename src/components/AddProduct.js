@@ -138,8 +138,8 @@ export default function AddProducts() {
                                 <label class=" control-label">Status</label>
                                 <div class="col-sm-8">
                                     <select name="status" class="form-control" value={formData.status} onChange={handleChange}>
-                                        <option value="Open">Close</option>
-                                        <option value="Close">Open</option>
+                                        <option value="Close">Close</option>
+                                        <option value="Open">Open</option>
                                     </select>
                                 </div>
                             </div>

@@ -3,18 +3,20 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function ProductListing() {
     const userId = localStorage.getItem('signin');
-    console.log("user",userId);
+    console.log("user", userId);
     const [formData, setFormData] = useState({ bidAmount: '' });
     const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]); 
-    const [selectedProduct, setSelectedProduct] = useState(null); 
-    const [showModal, setShowModal] = useState(false); 
-    const [searchQuery, setSearchQuery] = useState(''); 
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -40,40 +42,47 @@ export default function ProductListing() {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:5269/api/Products'); // Assuming the API endpoint is correct  
-
+            const response = await axios.get('http://localhost:5269/api/Products');
             const productsWithImages = await Promise.all(response.data.map(async (product) => {
                 try {
                     const imageResponse = await axios.get(`http://localhost:5269/api/Products/${product.productId}/Image`, {
                         responseType: 'arraybuffer',
                     });
                     const imageUrl = URL.createObjectURL(new Blob([imageResponse.data], { type: 'image/jpeg' }));
-                    return { ...product, imageUrl };
+
+                    // Check if the sellerId is not equal to userId 
+                    if (product.sellerId !== userId) {
+                        return { ...product, imageUrl }; // Return the product if sellerId is not equal to userId  
+                    }
+                    return null; // Return null if sellerId matches userId  
                 } catch (error) {
                     console.error('Error fetching image for product:', product.productId, error);
-                    return product;
+                    return null;
                 }
+
             }));
-            setProducts(productsWithImages);
-            setFilteredProducts(productsWithImages);
-            setSelectedProduct(productsWithImages[0])
+
+            const filteredProducts = productsWithImages.filter(product => product !== null);
+            setProducts(filteredProducts);
+            setFilteredProducts(filteredProducts);
+            setSelectedProduct(filteredProducts[0]); // Update selectedProduct with filtered products  
         } catch (error) {
             console.error('Error fetching products:', error);
         }
     };
-
     const handleProductDetails = (product) => {
         setSelectedProduct(product);
     }
 
-    const handleSearch = (e) => { 
-        const query = e.target.value.toLowerCase(); 
-        setSearchQuery(query); 
-        const filtered = products.filter(product => product.title.toLowerCase().includes(query)); 
-        setFilteredProducts(filtered); 
-    }; 
+    const handleSearch = (e) => {
+        const query = e.target.value.toLowerCase();
+        setSearchQuery(query);
+        const filtered = products.filter(product => product.title.toLowerCase().includes(query));
+        setFilteredProducts(filtered);
+    };
 
     const handleLogout = async () => {
+        navigate("/login")
         try {
             const cleanupLocalStorage = () => {
                 localStorage.removeItem('signin'); // Remove userId from local storage 
@@ -82,14 +91,17 @@ export default function ProductListing() {
             return () => {
                 window.removeEventListener('beforeunload', cleanupLocalStorage);
             };
-            
+
+
         } catch (error) {
             console.error('Error:', error);
-        }finally{
+        } finally {
             window.location.reload();
-
         }
     }
+    const handlelogin = () => {
+        navigate("/login")
+    };
 
     return (
         <div className="product-listing">
@@ -105,22 +117,22 @@ export default function ProductListing() {
                         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                             <ul id="nav-length" class="navbar-nav justify-content-between border-top border-2 text-center">
                                 <li class="nav-item">
-                                    <a href='/' class="nav-link border-hover py-3" style={{color:'black'}}>Home</a>
+                                    <a href='/' class="nav-link border-hover py-3" style={{ color: 'black' }}>Home</a>
                                 </li>
                                 <li class="nav-item d-flex justify-content-center h-100">
                                     <div class="searchbar">
-                                        <input class="search_input" type="text" name="searchQuery" placeholder="Search..." value={searchQuery} onChange={handleSearch}/>
+                                        <input class="search_input" type="text" name="searchQuery" placeholder="Search..." value={searchQuery} onChange={handleSearch} />
                                         <a href="#" class="search_icon"><i class="bi bi-search"></i></a>
                                     </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link border-hover py-3" style={{color:'black'}}>About</a>
+                                    <a href="#" class="nav-link border-hover py-3" style={{ color: 'black' }}>About</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link border-hover py-3" style={{color:'black'}}>Contact</a>
+                                    <a href="#" class="nav-link border-hover py-3" style={{ color: 'black' }}>Contact</a>
                                 </li>
                                 <li class="nav-item">
-                                    {userId? <a href="#" id="sign-in" class="nav-link my-2 px-4 text-white" onClick={handleLogout}>Logout</a>:<a href="/login" id="sign-in" class="nav-link my-2 px-4 text-white">signin</a>}
+                                    {userId ? <a href="#" id="sign-in" class="nav-link my-2 px-4 text-white" onClick={handleLogout}>Logout</a> : <a href="/login" id="sign-in" class="nav-link my-2 px-4 text-white">signin</a>}
                                 </li>
                             </ul>
                         </div>
@@ -162,19 +174,21 @@ export default function ProductListing() {
                     <div className='listing'>
                         <h1 >Products List</h1>
                         <div className="products-container">
-                            {filteredProducts.map((product, index) => (
-                                <div key={product.productId} className="product-item">
-                                    <h3 onClick={() => handleProductDetails(product)}>{product.title}</h3>
-                                    <p>Top Price: {product.startingPrice}</p>
-                                    <p>Ending Date: {product.endingDate}</p>
-                                    <img src={product.imageUrl} alt={product.title} />
-                                    <div className="start-auction">
-                                        <button className="btn btn-primary" type='button' onClick={() => handleProductDetails(product)}>Details</button>
+                            {filteredProducts
+                                .filter(product => product && product.sellerId !== userId) // Filter out null/undefined products 
+                                .map((product, index) => (
+                                    <div key={product.productId} className="product-item">
+                                        <h3 onClick={() => handleProductDetails(product)}>{product.title}</h3>
+                                        <p>Top Price: {product.startingPrice}</p>
+                                        <p>Ending Date: {product.endingDate}</p>
+                                        <img src={product.imageUrl} alt={product.title} />
+                                        <div className="start-auction">
+                                            <button className="btn btn-primary" type='button' onClick={() => handleProductDetails(product)}>Details</button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
-                    </div>
+                   </div>
 
                     <div className='product-detail'>
                         {selectedProduct && (
@@ -194,39 +208,41 @@ export default function ProductListing() {
                                         </div>
                                         <span class="price-box__old">Status: {selectedProduct.status}</span>
                                     </div>
-                                    <div class="price-btnbox row">
-                                        <div class="price-btns col">
-                                            <input type="text" class="form-control" placeholder='Enter your amount' name='bidAmount' value={formData.bidAmount} onChange={handleChange} />
+                                    <div className="price-btnbox row">
+                                        <div className="price-btns col">
+                                            <input type="text" className="form-control" placeholder="Enter your amount" name="bidAmount" value={formData.bidAmount} onChange={handleChange} />
                                         </div>
                                         <div className="start-auction col">
-                                            <button className="btn btn-primary" type='button' onClick={() =>handleBidNow(selectedProduct.productId)}>Bid Now</button>
+                                            {selectedProduct && selectedProduct.status !== "Close" && ( // Add this condition 
+                                                <button className="btn btn-primary" type="button" onClick={() => { userId ? handleBidNow(selectedProduct.productId) : handlelogin() }}>Bid Now</button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         )}
                     </div>
-                    
+
                 </div>
             </div>
-            <div id="myModal" className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}> 
-                <div className="modal-dialog modal-confirm"> 
-                    <div className="modal-content"> 
-                        <div className="modal-header"> 
-                            <div className="icon-box"> 
-                                <i className="material-icons">&#xE876;</i> 
-                            </div> 
-                            <h4 className="modal-title w-100">Awesome!</h4> 
-                        </div> 
-                        <div className="modal-body"> 
-                            <p className="text-center">Your Bidding has been confirmed</p> 
-                        </div> 
-                        <div className="modal-footer"> 
-                            <button className="btn btn-success btn-block" onClick={() => {setShowModal(false); window.location.reload();}}>OK</button> 
-                        </div> 
-                    </div> 
-                </div> 
-            </div> 
+            <div id="myModal" className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}>
+                <div className="modal-dialog modal-confirm">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <div className="icon-box">
+                                <i className="material-icons">&#xE876;</i>
+                            </div>
+                            <h4 className="modal-title w-100">Awesome!</h4>
+                        </div>
+                        <div className="modal-body">
+                            <p className="text-center">Your Bidding has been confirmed</p>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn btn-success btn-block" onClick={() => { setShowModal(false); window.location.reload(); }}>OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

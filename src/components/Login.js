@@ -29,11 +29,12 @@ export default function Login() {
             setError("Invalid email");
             return;
         }
+        
         try {
             const response = await axios.post('http://localhost:5269/api/SignupLogin/login', formData);
             if (response.status === 200) {
-                const token = response.data.tokenString;
-                localStorage.setItem('token', token);
+                // const token = response.data.tokenString;
+                // localStorage.setItem('token', token);
                 const userId = response.data.userId;
                 localStorage.setItem('signin',userId);
                 console.log("User: ",userId);
@@ -54,7 +55,7 @@ export default function Login() {
                 <form className="login-form" onSubmit={handleSubmit}>
                     <input className="un" type="text" align="center" placeholder="Email" name='email' value={formData.email} onChange={handleChange} />
                     <input className="pass" type="password" align="center" placeholder="Password" name='password' value={formData.password} onChange={handleChange} />
-                    <button className="submit" type="submit">Login</button>
+                    <button className="submit" type="submit" data-testid="Login">Login</button>
                     <p className="forgot" align="center"><a href="/forgotpassword">Forgot Password?</a></p>
                     <label>Don't have an account? <a href="/signup">SignUp</a></label>
                 </form>

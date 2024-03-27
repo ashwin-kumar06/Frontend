@@ -9,20 +9,23 @@ import ProductListing from './components/ProductListing';
 import PersonalDetails from './components/PersonalDetails';
 import UserDashboard from './components/UserDashboard';
 import { Routes, Route } from 'react-router-dom';
+import ViewBids from './components/ViewBids';
 
 function App() {
-  
+
   return (
     <div className="App">
-      
+
       <Routes>
+        <Route path="/viewbids/:productId" element={<ViewBids />} />
+        <Route path='/viewbids' element={<ViewBids/>}></Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/" element={<Homepage />}/>
-        <Route path="/homepage" element={<Homepage />}/>
-        <Route path="/addproducts" element={<AddProducts />}/>
-        <Route path="/productlisting" element={<ProductListing />}/>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/homepage" element={<Homepage />} />
+        <Route path="/addproducts" element={<AddProducts />} />
+        <Route path="/productlisting" element={<ProductListing />} />
         <Route path='/cardpayment' element={<CardPayment />} />
         <Route path='/personaldetails' element={<PersonalDetails />} />
         <Route path='/userdashboard' element={<UserDashboard />} />

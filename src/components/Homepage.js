@@ -60,6 +60,7 @@ export default function Homepage() {
     };
 
     const handleLogout = async () => {
+        navigate("/login")
         try {
             const cleanupLocalStorage = () => {
                 localStorage.removeItem('signin'); // Remove userId from local storage 
@@ -68,14 +69,19 @@ export default function Homepage() {
             return () => {
                 window.removeEventListener('beforeunload', cleanupLocalStorage);
             };
-            
         } catch (error) {
             console.error('Error:', error);
         }finally{
             window.location.reload();
-
+            
         }
     }
+    const handleLogin = () =>{
+        navigate("/login")
+    };
+    const handleSell=() =>{
+        navigate("/addproducts")
+    };
 
 
     return (
@@ -93,8 +99,8 @@ export default function Homepage() {
                         <div className="navbar-nav ms-auto p-4 p-lg-0">
                             <a href="index.html" className="nav-item nav-link active">Home</a>
                             <a href='/productlisting' className="nav-item nav-link" >Buy</a>
-                            <a href='/addproducts' className="nav-item nav-link" >Sell</a>
-                            <a href="/userdashboard" className="nav-item nav-link">Profile</a>
+                            <a href='#' className="nav-item nav-link" onClick={()=>{userId? handleSell():handleLogin()}} >Sell</a>
+                            <a href="" className="nav-item nav-link" onClick={()=>{userId? navigate('/userdashboard'):handleLogin()}}>Profile</a>
                         </div>
                         <div className="d-none d-lg-flex ms-2">
                             <p className='ms-2' style={{ color: 'white' }}>{userId ? userdetails.name : <a href='/login' style={{ color: 'white' }}>Sign in</a>}</p>

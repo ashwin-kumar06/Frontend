@@ -4,6 +4,7 @@ import { useNavigate} from "react-router-dom";
 import axios from 'axios';
 
 export default function PersonalDetails() {
+    const [error, setError] = useState("");
     const userId = localStorage.getItem('signin');
     const [formData, setFormData] = useState({name:'', mobileNumber:'', aadhar:'', address:'', userId:'' });
     const navigate = useNavigate();
@@ -16,6 +17,13 @@ export default function PersonalDetails() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(formData.mobileNumber<10)
+        {
+            setError("Invalid Number")
+        }
+        else if(formData.aadhar<12){
+            setError("Invalid Aadhar")
+        }
         try {
             const response = await axios.post(`http://localhost:5269/api/PersonalDetails?name=${formData.name}&mobileNumber=${formData.mobileNumber}&aadhar=${formData.aadhar}&address=${formData.address}&userId=${userId}`, formData);
             if (response.status === 200 || response.status === 201) {
@@ -31,6 +39,7 @@ export default function PersonalDetails() {
         <div className='login-signup'>
             <div className="login">
                 <p className="sign" align="center">Details</p>
+                <p className='error'>{error}</p>
                 <form className="login-form" onSubmit={handleSubmit}>
                     <input className="un" type="text" align="center" placeholder="Name" name='name' value={formData.name} onChange={handleChange} />
                     <input className="pass" type="text" align="center" placeholder="Mobile Number" name='mobileNumber' value={formData.mobileNumber} onChange={handleChange} />
