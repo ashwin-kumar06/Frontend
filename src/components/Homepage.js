@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import '../styles/Homepage.css'
-import queryString from 'query-string';
+
 
 export default function Homepage() {
     const [products, setProducts] = useState([]);
@@ -32,7 +32,7 @@ export default function Homepage() {
             const response = await axios.get(`http://localhost:5269/api/PersonalDetails/${userId}`);
             setUserDetails(response.data);
         } catch (error) {
-            console.error()
+            
         }
     }
 
@@ -90,7 +90,7 @@ export default function Homepage() {
 
                 <nav className="navbar navbar-expand-lg navbar-dark py-lg-0 px-lg-5 wow" data-wow-delay="0.1s">
                     <a href="index.html" className="navbar-brand ms-4 ms-lg-0">
-                        <h1 className="fw-bold m-0">Anytime Anyone<span className="text-white"> Anywhere</span></h1>
+                        <h1 className="fw-bold m-0" data-testid="slogan">Anytime Anyone<span className="text-white"> Anywhere</span></h1>
                     </a>
                     <button type="button" className="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                         <span className="navbar-toggler-icon"></span>
@@ -125,7 +125,7 @@ export default function Homepage() {
                                             <h1 className="display-4 text-white mb-3 animated slideInDown">Opportunity knocks anytime, for anyone, anywhere</h1>
                                             <p className="fs-5 text-white-50 mb-5 animated slideInDown">Seize it with online auctions. #anytimeanyoneanywhere</p>
                                             <a className="btn btn-primary py-2 px-3 animated slideInDown" href="/signup">
-                                                <button className="btn">Register</button>
+                                                <button className="btn" data-testid='Register'>Register</button>
                                             </a>
                                         </div>
                                     </div>
@@ -138,7 +138,7 @@ export default function Homepage() {
             </div>
 
             <div className="container-xxl bg-light my-5 py-5">
-                <h2>Current Auctions</h2>
+                <h2 data-testid='current'>Current Auctions</h2>
                 <div id="productCarousel" className="carousel slide" data-bs-ride="carousel">
                     <div className="carousel-inner">
                         {products.map((product, index) => (
@@ -170,7 +170,7 @@ export default function Homepage() {
                                                     <img className="img-fluid" src={product.imageUrl} alt="" />
                                                     <div className="causes-overlay">
                                                         <a className="btn btn-outline-primary" href="#">
-                                                            <button className='btn'>Bid Now</button>
+                                                            <button className='btn' >Bid Now</button>
                                                         </a>
                                                     </div>
                                                 </div>

@@ -97,9 +97,9 @@ export default function ViewBids() {
                                     <td>{bid.bidAmount}</td>
                                     <td>
                                         {bid.approved ? (
-                                            <p>Approved</p>
+                                            <p data-testid="Approved">Approved</p>
                                         ) : (
-                                            <a className='btn' onClick={() => {updateBidStatus(bid.bidderId, bid.bidAmount); updateProductStatus(productId)}}>Approve</a>
+                                            <a className='btn' onClick={() => {updateBidStatus(bid.bidderId, bid.bidAmount); updateProductStatus(productId)}} data-testid='Approve'>Approve</a>
                                         )}
                                     </td>
                                 </tr>

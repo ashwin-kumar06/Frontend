@@ -68,13 +68,13 @@ export default function AddProducts() {
                         <div class="row-12 d-flex">
                             <div className='col-7'>
                                 <div class="form-group row">
-                                    <label class="control-label col-1">Title</label>
+                                    <label class="control-label col-1" data-testid="Title">Title</label>
                                     <div class="col-6">
                                         <input type="text" class="form-control" placeholder='Product name' name='title' value={formData.title} onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Description</label>
+                                    <label class="control-label" data-testid="Description">Description</label>
                                     <div class="col-7">
                                         <textarea type="text" class="form-control" placeholder='Product brand/model/size/color' name='description' value={formData.description} onChange={handleChange}></textarea>
                                     </div>
@@ -90,10 +90,10 @@ export default function AddProducts() {
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class=" control-label">Type</label>
+                                <label class=" control-label" data-testid="Type">Type</label>
                                 <div class="col-sm-8">
                                     <select name="category" class="form-control" value={formData.category} onChange={handleChange}>
-                                        <option value="Electronics">Electronics</option>
+                                        <option value="Electronics" data-testid="Electronics">Electronics</option>
                                         <option value="Art">Art</option>
                                         <option value="Fashion">Fashion</option>
                                         <option value="Education">Education</option>
@@ -104,19 +104,19 @@ export default function AddProducts() {
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class=" control-label">Expiry Date</label>
+                                <label class=" control-label" data-testid="Expiry Date">Expiry Date</label>
                                 <div class="col-sm-8">
                                     <input type="date" class="date-end ml-5 form-control datepicker col-sm-8" placeholder="Date End" name='endingDate' value={formData.endingDate} onChange={handleChange} />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class=" control-label">Condition</label>
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                <label className=" control-label" data-testid="Condition">Condition</label>
                                 <div class="col-sm-8">
                                     <select name="condition" class="form-control" value={formData.condition} onChange={handleChange}>
                                         <option value="New">select condition</option>
-                                        <option value="New">New</option>
+                                        <option value="New" data-testid="New">New</option>
                                         <option value="Good condition">Good condition</option>
                                         <option value="Little scratches">Little scratches</option>
                                         <option value="One or more years older">One or more years older</option>
@@ -125,20 +125,20 @@ export default function AddProducts() {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class=" control-label">Starting Price</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name='startingPrice' value={formData.startingPrice} onChange={handleChange} />
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                <label className=" control-label" data-testid="Starting Price">Starting Price</label>
+                                <div className="col-sm-8">
+                                    <input type="text" className="form-control" name='startingPrice' value={formData.startingPrice} onChange={handleChange} />
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class=" control-label">Status</label>
+                                <label class=" control-label" data-testid="Status">Status</label>
                                 <div class="col-sm-8">
                                     <select name="status" class="form-control" value={formData.status} onChange={handleChange}>
-                                        <option value="Close">Close</option>
+                                        <option value="Close" data-testid="Close">Close</option>
                                         <option value="Open">Open</option>
                                     </select>
                                 </div>

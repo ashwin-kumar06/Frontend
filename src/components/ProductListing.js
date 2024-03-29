@@ -132,7 +132,7 @@ export default function ProductListing() {
                                     <a href="#" class="nav-link border-hover py-3" style={{ color: 'black' }}>Contact</a>
                                 </li>
                                 <li class="nav-item">
-                                    {userId ? <a href="#" id="sign-in" class="nav-link my-2 px-4 text-white" onClick={handleLogout}>Logout</a> : <a href="/login" id="sign-in" class="nav-link my-2 px-4 text-white">signin</a>}
+                                    {userId ? <a href="#" id="sign-in" class="nav-link my-2 px-4 text-white" onClick={handleLogout}>Logout</a> : <a href="/login" id="sign-in" class="nav-link my-2 px-4 text-white" data-testid="sign-in">signin</a>}
                                 </li>
                             </ul>
                         </div>
@@ -142,7 +142,7 @@ export default function ProductListing() {
             <div className='cate-list d-flex '>
                 <div className="cate-recent">
                     <div className='cate'>
-                        <h5>Categories</h5>
+                        <h5 data-testid="Categories">Categories</h5>
                         <ul>
                             <li><a href="">Electronics</a></li>
                             <li><a href="">Art</a></li>
@@ -172,15 +172,15 @@ export default function ProductListing() {
 
                 <div className='d-flex'>
                     <div className='listing'>
-                        <h1 >Products List</h1>
+                        <h1 data-testid="Products List">Products List</h1>
                         <div className="products-container">
                             {filteredProducts
                                 .filter(product => product && product.sellerId !== userId) // Filter out null/undefined products 
                                 .map((product, index) => (
                                     <div key={product.productId} className="product-item">
                                         <h3 onClick={() => handleProductDetails(product)}>{product.title}</h3>
-                                        <p>Top Price: {product.startingPrice}</p>
-                                        <p>Ending Date: {product.endingDate}</p>
+                                        <p data-testid="Top Price">Top Price: {product.startingPrice}</p>
+                                        <p data-testid="Ending Date">Ending Date: {product.endingDate}</p>
                                         <img src={product.imageUrl} alt={product.title} />
                                         <div className="start-auction">
                                             <button className="btn btn-primary" type='button' onClick={() => handleProductDetails(product)}>Details</button>
@@ -214,7 +214,7 @@ export default function ProductListing() {
                                         </div>
                                         <div className="start-auction col">
                                             {selectedProduct && selectedProduct.status !== "Close" && ( // Add this condition 
-                                                <button className="btn btn-primary" type="button" onClick={() => { userId ? handleBidNow(selectedProduct.productId) : handlelogin() }}>Bid Now</button>
+                                                <button className="btn btn-primary" type="button" onClick={() => { userId ? handleBidNow(selectedProduct.productId) : handlelogin() }} data-testid="BidNow">Bid Now</button>
                                             )}
                                         </div>
                                     </div>
@@ -232,10 +232,10 @@ export default function ProductListing() {
                             <div className="icon-box">
                                 <i className="material-icons">&#xE876;</i>
                             </div>
-                            <h4 className="modal-title w-100">Awesome!</h4>
+                            <h4 className="modal-title w-100" data-testid="Awesome!">Awesome!</h4>
                         </div>
                         <div className="modal-body">
-                            <p className="text-center">Your Bidding has been confirmed</p>
+                            <p className="text-center" data-testid="confirm">Your Bidding has been confirmed</p>
                         </div>
                         <div className="modal-footer">
                             <button className="btn btn-success btn-block" onClick={() => { setShowModal(false); window.location.reload(); }}>OK</button>

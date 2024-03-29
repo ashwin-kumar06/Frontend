@@ -41,6 +41,7 @@ export default function ForgotPassword() {
         <div className='login-signup'>
             <div className="login">
                 <p className="sign" align="center">Verify Email</p>
+                <p data-testid='Invalid' className='error'>{error}</p>
                 <form className="login-form">
                     <input className="un" type="text" align="center" placeholder="Enter email" name='email' value={formData.email} onChange={handleChange} />
                     <button className="submit" onClick={handleEmail}>Send</button>
